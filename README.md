@@ -4,11 +4,11 @@ Student portfolio and certification verification app. Students manage skills, co
 
 ## Stack
 
-Spring Boot 3.3, Java 17, Maven, Spring Security JWT, BCrypt, JPA/Hibernate, MySQL (production), H2 (local development), and a responsive HTML/CSS/JavaScript frontend.
+Spring Boot 3.3, Java 17, Maven, Spring Security JWT, BCrypt, JPA/Hibernate, PostgreSQL (production), H2 (local development), and a responsive HTML/CSS/JavaScript frontend.
 
 ## Local run
 
-The backend uses a file-based H2 database by default, so MySQL is not required for the first run.
+The backend uses a file-based H2 database by default, so PostgreSQL is not required for the first run.
 
 ```powershell
 cd backend
@@ -33,13 +33,13 @@ For production, start with the `prod` profile:
 SPRING_PROFILES_ACTIVE=prod
 ```
 
-The production profile requires the database and authentication secrets and uses `ddl-auto=validate`; apply the SQL in `database/` or an equivalent migration before deployment. Do not use H2 or placeholder secrets in production.
+The production profile requires the database and authentication secrets and uses `ddl-auto=validate`; for a new database, set `SPRING_JPA_HIBERNATE_DDL_AUTO=update` for the first startup to create tables, then remove it so the production default returns to `validate`. Do not use H2 or placeholder secrets in production.
 
 ## Deployment
 
 Deploy `frontend/` as a static site on Vercel with no build command and output directory `.`. Because the frontend is intentionally framework-free, configure `window.TRACKER_API` before `js/api.js` in the deployed HTML pages to the Render API base, for example `https://your-render-service.onrender.com/api`, or use a Vercel rewrite to proxy `/api` to Render. Local development uses the built-in proxy described above.
 
-Deploy `backend/` on Render with Java 17, build command `mvn clean package`, start command `java -jar target/student-tracker-1.0.0.jar`, and the `prod` profile. Set all variables from `.env.example`; set `FRONTEND_ORIGIN` to the exact Vercel origin. Never commit `.env`, database passwords, JWT secrets, faculty codes, or seed passwords.
+Deploy `backend/` on Render as a Docker Web Service using `backend/Dockerfile` and the `prod` profile. Set the Root Directory to `backend`; the Dockerfile builds and starts the Java 17 app. Create a Render PostgreSQL database in the same region and configure `DB_URL` as `jdbc:postgresql://<internal-host>:5432/<database-name>`, plus `DB_USERNAME` and `DB_PASSWORD`. Set all variables from `.env.example`; set `FRONTEND_ORIGIN` to the exact Vercel origin. Never commit `.env`, database passwords, JWT secrets, faculty codes, or seed passwords.
 
 ## Verification
 

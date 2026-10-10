@@ -1,2 +1,4 @@
-CREATE DATABASE IF NOT EXISTS student_skill_tracker;
--- Hibernate creates and evolves the tables on application startup.
+-- Create a PostgreSQL database named student_tracker in your database provider.
+-- For a new empty database, set SPRING_JPA_HIBERNATE_DDL_AUTO=update for the first startup
+-- so Hibernate creates the tables. Remove that variable after successful initialization;
+-- the production profile then uses ddl-auto=validate.
